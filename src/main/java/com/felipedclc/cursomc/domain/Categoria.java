@@ -2,9 +2,17 @@ package com.felipedclc.cursomc.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity // CLASSE É AGORA UMA CATEGORIA DO JPA
 public class Categoria implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	@Id // BUSCA POR ID
+	@GeneratedValue(strategy=GenerationType.IDENTITY) // DEFININDO A ESTRATEGIA DE GERAÇÃO AUOMATICA DAS CATEGORIAS
 	private Integer id;
 	private String name;
 	
