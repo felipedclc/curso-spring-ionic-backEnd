@@ -8,29 +8,38 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
-@Entity // CLASSE É AGORA UMA CATEGORIA DO JPA
-public class Categoria implements Serializable {
+@Entity // ENTIDADE DO JPA 
+public class Produto implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	@Id // BUSCA POR ID
-	@GeneratedValue(strategy=GenerationType.IDENTITY) // DEFININDO A ESTRATEGIA DE GERAÇÃO AUOMATICA DAS CATEGORIAS
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	private String name;
+	private Double price;
 	
-	@ManyToMany(mappedBy = "categorias")
-	private List<Produto> produtos = new ArrayList<>();
+	@ManyToMany
+	@JoinTable(name = "PRODUTO_CATEGORIA",  // TABELA QUE JUNTA CATEGORIAS E PRODUTOS
+		joinColumns = @JoinColumn(name = "produto_id"), // CHAVE ESTRANGEIRA DO PRODUTO 
+		inverseJoinColumns = @JoinColumn(name = "categoria_id")// CHAVE ESTRANGEIRA QUE REFERENCIA A CATEGORIA
+	)
+	private List<Categoria> categorias = new ArrayList<>();
 	
-	public Categoria() {
+	public Produto() {
 		
 	}
 	
-	public Categoria(Integer id, String name) {
+	public Produto(Integer id, String name, Double price) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.price = price;
 	}
+	
 	public Integer getId() {
 		return id;
 	}
@@ -43,18 +52,19 @@ public class Categoria implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	public List<Produto> getProdutos() {
-		return produtos;
+	public Double getPrice() {
+		return price;
+	}
+	public void setPrice(Double price) {
+		this.price = price;
 	}
 
-	public void setProdutos(List<Produto> produtos) {
-		this.produtos = produtos;
+	public List<Categoria> getCategorias() {
+		return categorias;
 	}
 
-	@Override
-	public String toString() {
-		return "Categoria [id=" + id + ", name=" + name + "]";
+	public void setCategorias(List<Categoria> categorias) {
+		this.categorias = categorias;
 	}
 
 	@Override
@@ -73,7 +83,7 @@ public class Categoria implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Categoria other = (Categoria) obj;
+		Produto other = (Produto) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
