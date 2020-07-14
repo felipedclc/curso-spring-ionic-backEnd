@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.felipedclc.cursomc.domain.Categoria;
 import com.felipedclc.cursomc.repositories.CategoriaRepository;
+import com.felipedclc.cursomc.services.exceptions.ObjectNotFoundException;
 
 @Service // CLASSE QUE BUSCA OS DADOS DO REPOSITÓRIO E PASSA PARA O CONTROLADOR REST 
 public class CategoriaService {
@@ -16,6 +17,7 @@ public class CategoriaService {
 	
 	public Categoria find(Integer id) {
 		 Optional<Categoria> obj = repo.findById(id);
-		return obj.orElse(null);
-		}
+		return obj.orElseThrow(() -> new ObjectNotFoundException(
+		 "Objeto não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName()));
+		} 
 }
