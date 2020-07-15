@@ -2,7 +2,9 @@ package com.felipedclc.cursomc.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -28,9 +31,11 @@ public class Produto implements Serializable {
 	@ManyToMany
 	@JoinTable(name = "PRODUTO_CATEGORIA",  // TABELA QUE JUNTA CATEGORIAS E PRODUTOS
 		joinColumns = @JoinColumn(name = "produto_id"), // CHAVE ESTRANGEIRA DO PRODUTO 
-		inverseJoinColumns = @JoinColumn(name = "categoria_id")// CHAVE ESTRANGEIRA QUE REFERENCIA A CATEGORIA
-	)
+		inverseJoinColumns = @JoinColumn(name = "categoria_id")) // CHAVE ESTRANGEIRA QUE REFERENCIA A CATEGORIA
 	private List<Categoria> categorias = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "id.produto") // id (ItemPedidoPK) QUE É ONDE ESTÁ A REFERÊNCIA DO PRODUTO 
+	private Set<ItemPedido> itens = new HashSet<>();
 	
 	public Produto() {
 		
@@ -41,6 +46,14 @@ public class Produto implements Serializable {
 		this.id = id;
 		this.name = name;
 		this.price = price;
+	}
+	
+	public List<Pedido> getPedidos() { // PADRAO JAVA BINS (GET PARA OBTER DADOS)
+		List<Pedido> lista = new ArrayList<>();
+		for(ItemPedido ip : itens) {
+			lista.add(ip.getPedido());
+		}
+		return lista;
 	}
 	
 	public Integer getId() {
@@ -68,6 +81,14 @@ public class Produto implements Serializable {
 
 	public void setCategorias(List<Categoria> categorias) {
 		this.categorias = categorias;
+	}
+	
+	public Set<ItemPedido> getItens() {
+		return itens;
+	}
+
+	public void setItens(Set<ItemPedido> itens) {
+		this.itens = itens;
 	}
 
 	@Override
