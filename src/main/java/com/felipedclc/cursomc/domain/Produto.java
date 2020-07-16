@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity // ENTIDADE DO JPA 
 public class Produto implements Serializable {
@@ -34,6 +35,7 @@ public class Produto implements Serializable {
 		inverseJoinColumns = @JoinColumn(name = "categoria_id")) // CHAVE ESTRANGEIRA QUE REFERENCIA A CATEGORIA
 	private List<Categoria> categorias = new ArrayList<>();
 	
+	@JsonIgnore // O PRODUTO NÃO PRECISA SERIALIZAR A LISTA ONDE ESTÃO OUTROS PEDIDOS
 	@OneToMany(mappedBy = "id.produto") // id (ItemPedidoPK) QUE É ONDE ESTÁ A REFERÊNCIA DO PRODUTO 
 	private Set<ItemPedido> itens = new HashSet<>();
 	
@@ -48,6 +50,7 @@ public class Produto implements Serializable {
 		this.price = price;
 	}
 	
+	@JsonIgnore // TUDO QUE COMEÇAR COM GET É AUTOMATICAMENTE SERIALIZADO 
 	public List<Pedido> getPedidos() { // PADRAO JAVA BINS (GET PARA OBTER DADOS)
 		List<Pedido> lista = new ArrayList<>();
 		for(ItemPedido ip : itens) {
