@@ -15,7 +15,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity // ENTIDADE DO JPA 
@@ -28,7 +27,7 @@ public class Produto implements Serializable {
 	private String name;
 	private Double price;
 	
-	@JsonBackReference // OMITE A LISTA DE CATEGORIAS, POIS JA FORAM BUSCADAS NA CLASSE CATEGORIA(@JsonManagedReference)
+	@JsonIgnore // OMITE A LISTA DE CATEGORIAS, POIS JA FORAM BUSCADAS NA CLASSE CATEGORIA(@JsonManagedReference)
 	@ManyToMany
 	@JoinTable(name = "PRODUTO_CATEGORIA",  // TABELA QUE JUNTA CATEGORIAS E PRODUTOS
 		joinColumns = @JoinColumn(name = "produto_id"), // CHAVE ESTRANGEIRA DO PRODUTO 

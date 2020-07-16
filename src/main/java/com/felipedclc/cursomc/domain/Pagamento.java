@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.felipedclc.cursomc.domain.enums.EstadoPagamento;
 
 @Entity
@@ -22,7 +22,7 @@ public abstract class Pagamento implements Serializable {
 	private Integer id;
 	private Integer estado; // ARMAZENANDO UM NUMERO INTEIRO NO BANCO
 	
-	@JsonBackReference // NÃO ACESSA A SERIALIZAÇÃO DO PEDIDO
+	@JsonIgnore // NÃO ACESSA A SERIALIZAÇÃO DO PEDIDO
 	@OneToOne
 	@JoinColumn(name = "pedido_id") // CHAVE ESTRANGEIRA
 	@MapsId // COMANDO PARA O ID SER O MESMO (PAGAMENTO/PEDIDO)

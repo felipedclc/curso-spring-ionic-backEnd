@@ -10,8 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 @Entity // CLASSE É AGORA UMA CATEGORIA DO JPA
 public class Categoria implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -21,7 +19,6 @@ public class Categoria implements Serializable {
 	private Integer id;
 	private String name;
 	
-	@JsonManagedReference // REFERENCIA JSON (OS OBJETOS VIRAO ASSOCIADOS A CATEGORIA QUANDO BUSCAR NO POSTMAN)
 	@ManyToMany(mappedBy = "categorias")
 	private List<Produto> produtos = new ArrayList<>();
 	

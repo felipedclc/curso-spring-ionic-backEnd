@@ -14,8 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.felipedclc.cursomc.domain.enums.TipoCliente;
 
 @Entity
@@ -31,7 +30,6 @@ public class Cliente implements Serializable {
 	
 	private Integer tipo; // TIPO CLIENTE
 	
-	@JsonManagedReference // SERIALIZAÇÃO DOS ENDEREÇOS (EVITA A REPETIÇÃO CÍCLICA)
 	@OneToMany(mappedBy = "cliente")
 	private List<Endereco> enderecos = new ArrayList<>();
 	
@@ -39,7 +37,7 @@ public class Cliente implements Serializable {
 	@CollectionTable(name = "TELEFONE")
 	private Set<String> telefones = new HashSet<>(); // CONJUNTO DE TELEFONES (SET - NÃO ACEITA REPETIÇÃO)
 	
-	@JsonBackReference // NÃO ACESSA OS PEDIDOS SERIALIZADOS (EVITA REPETIÇÃO CICLICA)
+	@JsonIgnore // NÃO ACESSA OS PEDIDOS SERIALIZADOS (EVITA REPETIÇÃO CICLICA)
 	@OneToMany(mappedBy = "cliente") 	
 	private List<Pedido> pedidos = new ArrayList<>();
 	
