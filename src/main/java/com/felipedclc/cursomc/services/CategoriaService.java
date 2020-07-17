@@ -22,6 +22,12 @@ public class CategoriaService {
 		}
 
 	public Categoria insert(Categoria obj) {
+		obj.setId(null);
 		return repo.save(obj);
+	}
+
+	public Categoria update(Categoria obj) {
+		find(obj.getId()); // FIND JA POSSUI UMA EXCEÇÃO CASO NÃO ENCONTRE O ID
+		return repo.save(obj); // METODO SAVE SERVE PARA ATUALIZAR E INSERIR
 	} 
 }

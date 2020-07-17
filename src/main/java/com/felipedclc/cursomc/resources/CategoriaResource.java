@@ -28,10 +28,17 @@ public class CategoriaResource {
 		return ResponseEntity.ok().body(obj);
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
 	public ResponseEntity<Void> insert(@RequestBody Categoria obj) { // @RequestBody CONVERTE O JSON PARA O OBJETO JAVA 
 		obj = service.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build(); // CRIANDO O CODIGO URI 200
+	}
+	
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT) // METODO BUSCA O ID E EDITA 
+	public ResponseEntity<Void> update(@PathVariable Integer id, @RequestBody Categoria obj) {
+		obj.setId(id);
+		obj = service.update(obj);
+		return ResponseEntity.noContent().build();
 	}
 }
