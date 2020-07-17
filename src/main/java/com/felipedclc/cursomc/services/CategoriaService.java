@@ -3,10 +3,12 @@ package com.felipedclc.cursomc.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.felipedclc.cursomc.domain.Categoria;
 import com.felipedclc.cursomc.repositories.CategoriaRepository;
+import com.felipedclc.cursomc.resources.exception.DataIntegrityException;
 import com.felipedclc.cursomc.services.exceptions.ObjectNotFoundException;
 
 @Service // CLASSE QUE BUSCA OS DADOS DO REPOSITÓRIO E PASSA PARA O CONTROLADOR REST 
@@ -29,5 +31,15 @@ public class CategoriaService {
 	public Categoria update(Categoria obj) {
 		find(obj.getId()); // FIND JA POSSUI UMA EXCEÇÃO CASO NÃO ENCONTRE O ID
 		return repo.save(obj); // METODO SAVE SERVE PARA ATUALIZAR E INSERIR
-	} 
+	}
+
+	public void delete(Integer id) {
+		find(id);
+		try {
+			repo.deleteById(id);
+		}
+		catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityException("Não é possível excluir uma categoria que possui produtos");
+		}
+	}
 }
