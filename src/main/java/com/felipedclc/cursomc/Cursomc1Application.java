@@ -63,7 +63,12 @@ public class Cursomc1Application implements CommandLineRunner { // PERMITE IMPLE
 		
 		Categoria cat1 = new Categoria(null, "Informática");
 		Categoria cat2 = new Categoria(null, "Escritório");
-
+		Categoria cat3 = new Categoria(null, "Esportes");
+		Categoria cat4 = new Categoria(null, "Ferramentas");
+		Categoria cat5 = new Categoria(null, "Moveis");
+		Categoria cat6 = new Categoria(null, "Perfumaria");
+		Categoria cat7 = new Categoria(null, "Decaração");
+		
 		Produto p1 = new Produto(null, "Computador", 2000.00);
 		Produto p2 = new Produto(null, "Impressora", 800.00);
 		Produto p3 = new Produto(null, "Mouse", 80.00);
@@ -75,7 +80,7 @@ public class Cursomc1Application implements CommandLineRunner { // PERMITE IMPLE
 		p2.getCategorias().addAll(Arrays.asList(cat1, cat2));
 		p3.getCategorias().addAll(Arrays.asList(cat1));
 		
-		categoriaRepository.saveAll(Arrays.asList(cat1, cat2)); // SALVANDO NO BANCO DE DADOS
+		categoriaRepository.saveAll(Arrays.asList(cat1, cat2, cat3, cat4, cat5, cat6, cat7)); 
 		produtoRepository.saveAll(Arrays.asList(p1, p2, p3));
 
 		
