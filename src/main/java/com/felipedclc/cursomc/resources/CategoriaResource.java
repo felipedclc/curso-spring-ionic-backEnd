@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -35,14 +37,16 @@ public class CategoriaResource {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> insert(@RequestBody Categoria obj) { // @RequestBody CONVERTE O JSON PARA O OBJETO JAVA
+	public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO objDTO) { // @RequestBody CONVERTE O JSON PARA O OBJETO JAVA
+		Categoria obj = service.fromDTO(objDTO); // CONVERTENDO PARA DTO
 		obj = service.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build(); // CRIANDO O CODIGO URI 201
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT) // METODO BUSCA O ID E EDITA
-	public ResponseEntity<Void> update(@PathVariable Integer id, @RequestBody Categoria obj) {
+	public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO objDTO, @PathVariable Integer id) {
+		Categoria obj = service.fromDTO(objDTO);
 		obj.setId(id);
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
@@ -62,7 +66,7 @@ public class CategoriaResource {
 		return ResponseEntity.ok().body(listDTO);
 	}
 	
-	@RequestMapping(value =  "/page", method = RequestMethod.GET)
+	@RequestMapping(value =  "/page", method = RequestMethod.GET) // END POINT DE BUSCA POR PAGINAS
 	public ResponseEntity<Page<CategoriaDTO>> findPage(
 			@RequestParam(value = "page", defaultValue = "0") Integer page, // RequestParam (PARAMETRO OPCIONAL)
 			@RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage, // 24 É MULTIPLO DE 2, 3 E 4
