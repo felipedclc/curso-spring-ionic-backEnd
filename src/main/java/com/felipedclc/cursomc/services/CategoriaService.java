@@ -34,8 +34,13 @@ public class CategoriaService {
 	}
 
 	public Categoria update(Categoria obj) {
-		find(obj.getId()); // FIND JA POSSUI UMA EXCEÇÃO CASO NÃO ENCONTRE O ID
-		return repo.save(obj); // METODO SAVE SERVE PARA ATUALIZAR E INSERIR
+		Categoria newObj = find(obj.getId()); // FIND JA POSSUI UMA EXCEÇÃO CASO NÃO ENCONTRE O ID
+		updateData(newObj, obj);
+		return repo.save(newObj); // METODO SAVE SERVE PARA ATUALIZAR E INSERIR
+	}
+
+	private void updateData(Categoria newObj, Categoria obj) {
+		newObj.setName(obj.getName());
 	}
 
 	public void delete(Integer id) {
