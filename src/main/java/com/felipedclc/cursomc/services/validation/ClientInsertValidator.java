@@ -6,12 +6,19 @@ import java.util.List;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.felipedclc.cursomc.domain.Cliente;
 import com.felipedclc.cursomc.domain.enums.TipoCliente;
 import com.felipedclc.cursomc.dto.ClienteNewDTO;
+import com.felipedclc.cursomc.repositories.ClienteRepository;
 import com.felipedclc.cursomc.resources.exception.FieldMessage;
 import com.felipedclc.cursomc.services.validation.utils.BR;
 
 public class ClientInsertValidator implements ConstraintValidator<ClientInsert, ClienteNewDTO> {
+
+	@Autowired
+	private ClienteRepository repo;
 	
 	@Override
 	public void initialize(ClientInsert ann) {
@@ -28,6 +35,11 @@ public class ClientInsertValidator implements ConstraintValidator<ClientInsert, 
 		
 		if(objDto.getTipo().equals(TipoCliente.PESSOAJURIDICA.getCod()) && ! BR.isValidCNPJ(objDto.getCpfOuCnpj())) {
 			list.add(new FieldMessage("cpfOuCnpj", "CNsPJ inválido"));
+		}
+		
+		Cliente aux = repo.findByEmail(objDto.getEmail());
+		if(aux != null) { // SE NÃO FOR NULO O OBJETO(EMAIL) FOI ENCONTRADO 
+			list.add(new FieldMessage("email", "Email já existente"));
 		}
 		
 		for (FieldMessage e : list) { // PERCORRE A LISTA DE ERROS E INSERE OS ERROS CORRESPONDENTES
