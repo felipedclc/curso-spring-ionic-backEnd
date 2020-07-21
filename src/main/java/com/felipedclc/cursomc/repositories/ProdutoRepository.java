@@ -18,7 +18,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
 	//@Query("SELECT DISTINCT obj FROM Produto obj INNER JOIN obj.categorias cat WHERE obj.name LIKE %:name% AND cat IN :categorias")
 	//Page<Produto> search(@Param("name") String name, @Param("categorias") List<Categoria> categorias, Pageable pageRequest);
 	
-	@Transactional(readOnly=true)
+	@Transactional(readOnly=true) // APENAS PARA LEITURA - CARREGA MENOS O SISTEMA
 	Page<Produto> findDistinctByNameContainingAndCategoriasIn(String name, List<Categoria> categorias, Pageable pageRequest);
 	// UTILIZANDO CONSULTAS AUTOMATICAS POR NOME NO REPOSITÓRIO DO SPRING (PADRÃO DE NOMES)
 }

@@ -22,27 +22,27 @@ public class Pedido implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY) // GERANDO O ID DO PEDIDO (PAGAMENTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // GERANDO O ID DO PEDIDO (PAGAMENTO)
 	private Integer id;
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	private Date date;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "endereco_de_entrega_id") // CHAVE ESTRANGEIRA
 	private Endereco enderecoEntrega;
-	 
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "pedido") // SALVA O PEDIDO E O PAGAMENTO (JPA) 
+
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "pedido") // SALVA O PEDIDO E O PAGAMENTO (JPA)
 	private Pagamento pagamento;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "cliente_id") // CHAVE ESTRANGEIRA
 	private Cliente cliente;
 
-	@OneToMany(mappedBy = "id.pedido") // id (ItemPedidoPK) QUE POSSUI A REFERÊNCIA PARA O PEDIDO 
+	@OneToMany(mappedBy = "id.pedido") // id (ItemPedidoPK) QUE POSSUI A REFERÊNCIA PARA O PEDIDO
 	private Set<ItemPedido> itens = new HashSet<>();
-	
+
 	public Pedido() {
-		
+
 	}
 
 	public Pedido(Integer id, Date date, Endereco enderecoEntrega, Cliente cliente) {
@@ -51,6 +51,14 @@ public class Pedido implements Serializable {
 		this.date = date;
 		this.enderecoEntrega = enderecoEntrega;
 		this.cliente = cliente;
+	}
+
+	public double getValorTotal() {
+		double sum = 0.0;
+		for (ItemPedido ip : itens) {
+			sum = sum + ip.getSubTotal();
+		}
+	return sum;
 	}
 
 	public Integer getId() {
@@ -92,7 +100,7 @@ public class Pedido implements Serializable {
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
-	
+
 	public Set<ItemPedido> getItens() {
 		return itens;
 	}
