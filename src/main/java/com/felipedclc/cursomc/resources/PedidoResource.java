@@ -1,11 +1,17 @@
 package com.felipedclc.cursomc.resources;
 
+import java.net.URI;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.felipedclc.cursomc.domain.Pedido;
 import com.felipedclc.cursomc.services.PedidoService;
@@ -22,5 +28,12 @@ public class PedidoResource {
 		  // Response Entity: ARMAZENA RESPOSTAS HTTP PARA UM SERVIÇO REST (PROTOCOLO HTTP) 
 		Pedido obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
+	}
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity<Void> insert(@Valid @RequestBody Pedido obj) { // @RequestBody CONVERTE O JSON PARA O OBJETO JAVA
+		obj = service.insert(obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.created(uri).build(); // CRIANDO O CODIGO URI 201
 	}
 }

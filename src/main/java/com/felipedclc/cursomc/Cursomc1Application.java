@@ -132,8 +132,8 @@ public class Cursomc1Application implements CommandLineRunner { // PERMITE IMPLE
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		
-		Pedido ped1 = new Pedido(null, sdf.parse("26/06/2019 17:36"), e1, cli1);
-		Pedido ped2 = new Pedido(null, sdf.parse("10/10/2019 10:42"), e2, cli1);
+		Pedido ped1 = new Pedido(null, sdf.parse("26/06/2019 17:36"), cli1, e1);
+		Pedido ped2 = new Pedido(null, sdf.parse("10/10/2019 10:42"), cli1, e2);
 		
 		Pagamento pagto1 = new PagamentoComCartao(null, EstadoPagamento.APROVADO, ped1, 6);
 		ped1.setPagamento(pagto1);

@@ -27,10 +27,6 @@ public class Pedido implements Serializable {
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	private Date date;
 
-	@ManyToOne
-	@JoinColumn(name = "endereco_de_entrega_id") // CHAVE ESTRANGEIRA
-	private Endereco enderecoEntrega;
-
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "pedido") // SALVA O PEDIDO E O PAGAMENTO (JPA)
 	private Pagamento pagamento;
 
@@ -38,6 +34,10 @@ public class Pedido implements Serializable {
 	@JoinColumn(name = "cliente_id") // CHAVE ESTRANGEIRA
 	private Cliente cliente;
 
+	@ManyToOne
+	@JoinColumn(name = "endereco_de_entrega_id") // CHAVE ESTRANGEIRA
+	private Endereco enderecoEntrega;
+	
 	@OneToMany(mappedBy = "id.pedido") // id (ItemPedidoPK) QUE POSSUI A REFERÊNCIA PARA O PEDIDO
 	private Set<ItemPedido> itens = new HashSet<>();
 
@@ -45,12 +45,12 @@ public class Pedido implements Serializable {
 
 	}
 
-	public Pedido(Integer id, Date date, Endereco enderecoEntrega, Cliente cliente) {
+	public Pedido(Integer id, Date date, Cliente cliente, Endereco enderecoEntrega) {
 		super();
 		this.id = id;
 		this.date = date;
-		this.enderecoEntrega = enderecoEntrega;
 		this.cliente = cliente;
+		this.enderecoEntrega = enderecoEntrega;
 	}
 
 	public double getValorTotal() {
