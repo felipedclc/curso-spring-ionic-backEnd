@@ -35,6 +35,9 @@ public class PedidoService {
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
 	
+	@Autowired
+	private ClienteService clienteService;
+	
 	public Pedido find(Integer id) {
 		 Optional<Pedido> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
@@ -45,6 +48,7 @@ public class PedidoService {
 	public Pedido insert(Pedido obj) {
 		obj.setId(null); // GARANTINDO QUE É UM NOVO PEDIDO
 		obj.setDate(new Date()); // SETANDO A DATA PARA O MOMENTO ATUAL
+		obj.setCliente(clienteService.find(obj.getCliente().getId())); // SETANDO O CLIENTE COM O ID BUSCADO NO BD
 		obj.getPagamento().setEstado(EstadoPagamento.PENDENTE);// DEFININDO O ESTADO DO PAGAMENTO (pedido acabou de ser inserido)
 		obj.getPagamento().setPedido(obj); // O PAGAMENTO DEVE CONHECER O PEDIDO
 		if(obj.getPagamento() instanceof PagamentoComBoleto) { // "SE O PAGAMENTO FOR INSTANCIA DE PAGAMENTO COM BOLETO"
@@ -56,10 +60,12 @@ public class PedidoService {
 		for(ItemPedido ip : obj.getItens()) { // PERCORRENDO TODOS OS ITENS DE PEDIDO ASSOCIADOS AO OBJ
 			ip.setDesconto(0.0); // SEM DESCONTO
 			// QUANTIDADE JÁ ESTÁ ASSOCIADA AO ITEM PEDIDO
-			ip.setPreco(produtoService.find(ip.getProduto().getId()).getPrice()); // PEGANDO O PREÇO DO PRODUTO
+			ip.setProduto(produtoService.find(ip.getProduto().getId())); // SETANDO O PRODUTO COM O ID BUSCADO NO BD
+			ip.setPreco(ip.getProduto().getPrice()); // PEGANDO O PREÇO DO PRODUTO
 			ip.setPedido(obj); // ASSOCIANDO O ITEM DE PEDIDO COM O NOVO PEDIDO
 		}
 		itemPedidoRepository.saveAll(obj.getItens()); // SALVANDO OS ITENS(LISTA) NO REPOSITÓRIO
+		System.out.println(obj); // IMPRIMINDO O PEDIDO (toString)
 		return obj;
 	}
 }
