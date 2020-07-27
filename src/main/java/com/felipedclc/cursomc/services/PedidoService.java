@@ -68,7 +68,7 @@ public class PedidoService {
 			ip.setPedido(obj); // ASSOCIANDO O ITEM DE PEDIDO COM O NOVO PEDIDO
 		}
 		itemPedidoRepository.saveAll(obj.getItens()); // SALVANDO OS ITENS(LISTA) NO REPOSITÓRIO
-		emailService.sendOrderConfirmationEmail(obj);
+		emailService.sendOrderConfirmationHtmlEmail(obj);
 		return obj;
 	}
 }
