@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -41,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.cors().and().csrf().disable(); // CHAMANDO O CORS E DESATIVANDO O CSRF(ARMAZENA SEÇÃO)
 		http.authorizeRequests() 
 			.antMatchers(PUBLIC_MATCHERS).permitAll() // PERMITE TODOS OS CAMINHOS DO VETOR 
-			.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
+			.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll() // PERMITE APENAS ACESSAR DADOS
 			.anyRequest().authenticated(); // PEDE AUTORIZAÇÃO PARA QUEM NÃO FOR DO VETOR
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // BACK-END NÃO PDOE CRIAR SESSÃO DE USUÁRIO
 	}
@@ -51,5 +52,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
 		return source;  // CONCEDENDO ACESSO AOS END POINTS POR MULTIPLAS FONTES(/**) COM AS CONFIGURAÇÕES BÁSICAS 
+	}
+	
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder() { // ENCODANDO A SENHA
+		return new BCryptPasswordEncoder();
 	}
 }

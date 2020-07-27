@@ -31,8 +31,9 @@ public class Cliente implements Serializable {
 	@Column(unique = true) // NÃO PODERÁ HAVER REPETIÇAO (EMAIL)
 	private String email;
 	private String cpfOuCnpj;
-	
 	private Integer tipo; // TIPO CLIENTE
+	
+	private String senha;
 	
 	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL) // COMPORTAMENTO EM CASCATA CASO DE (PUT, DELETE..)
 	private List<Endereco> enderecos = new ArrayList<>();
@@ -49,13 +50,14 @@ public class Cliente implements Serializable {
 		
 	}
 
-	public Cliente(Integer id, String name, String email, String cpfOuCnpj, TipoCliente tipo) {
+	public Cliente(Integer id, String name, String email, String cpfOuCnpj, TipoCliente tipo, String senha) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.cpfOuCnpj = cpfOuCnpj;
 		this.tipo = (tipo == null) ? null : tipo.getCod(); // SE O TIPO = NULL ATRIBUIR(?) NULL, CASO CONTRARIO(:) ATRIBUIR getCod
+		this.senha = senha;
 	}
 
 	public Integer getId() {
@@ -96,6 +98,15 @@ public class Cliente implements Serializable {
 
 	public void setTipo(TipoCliente tipo) {
 		this.tipo = tipo.getCod(); // ARMAZENA O CODIGO 
+	}
+	
+	public String getSenha() {
+		return senha;
+	}
+
+	@JsonIgnore
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	public List<Endereco> getEnderecos() {
