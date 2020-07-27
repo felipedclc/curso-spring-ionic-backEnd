@@ -32,8 +32,8 @@ public class ProdutoResource {
 	
 	@RequestMapping(method = RequestMethod.GET) // END POINT DE BUSCA POR PAGINAS
 	public ResponseEntity<Page<ProdutoDTO>> findPage(
-			@RequestParam(value = "name", defaultValue = "0") String name,
-			@RequestParam(value = "categorias", defaultValue = "0") String categorias,
+			@RequestParam(value = "name", defaultValue = "") String name,
+			@RequestParam(value = "categorias", defaultValue = "") String categorias,
 			@RequestParam(value = "page", defaultValue = "0") Integer page, // RequestParam (PARAMETRO OPCIONAL)
 			@RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage, // 24 É MULTIPLO DE 2, 3 E 4
 			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy, // ORDENADO POR NOME
