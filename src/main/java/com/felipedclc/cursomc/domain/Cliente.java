@@ -5,18 +5,21 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.felipedclc.cursomc.domain.enums.Perfil;
 import com.felipedclc.cursomc.domain.enums.TipoCliente;
 
 @Entity
@@ -42,12 +45,16 @@ public class Cliente implements Serializable {
 	@CollectionTable(name = "TELEFONE")
 	private Set<String> telefones = new HashSet<>(); // CONJUNTO DE TELEFONES (SET - NÃO ACEITA REPETIÇÃO)
 	
+	@ElementCollection(fetch=FetchType.EAGER) // GARANTE QUE O CLIENTE DO BANCO DE DADOS VENHA COM OS PERFIS
+	@CollectionTable(name = "PERFIS")
+	private Set<Integer> perfis = new HashSet<>(); // CONJUNTO DE TELEFONES (SET - NÃO ACEITA REPETIÇÃO)
+	
 	@JsonIgnore // NÃO ACESSA OS PEDIDOS SERIALIZADOS (EVITA REPETIÇÃO CICLICA)
 	@OneToMany(mappedBy = "cliente") 	
 	private List<Pedido> pedidos = new ArrayList<>();
 	
-	public Cliente() {
-		
+	public Cliente() { // ADICIONANDO O PERFIL AO CLIENTE NA INSTANCIAÇÃO 
+		addPerfil(Perfil.CLIENTE);
 	}
 
 	public Cliente(Integer id, String name, String email, String cpfOuCnpj, TipoCliente tipo, String senha) {
@@ -109,6 +116,14 @@ public class Cliente implements Serializable {
 		this.senha = senha;
 	}
 
+	public Set<Perfil> getPerfis(){ // RETORNA OS PERFIS DO CLIENTE
+		return perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet()); 
+	}
+
+	public void addPerfil(Perfil perfil) {
+		perfis.add(perfil.getCod());
+	}
+	
 	public List<Endereco> getEnderecos() {
 		return enderecos;
 	}
