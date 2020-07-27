@@ -38,6 +38,9 @@ public class PedidoService {
 	@Autowired
 	private ClienteService clienteService;
 	
+	@Autowired
+	private EmailService emailService;
+	
 	public Pedido find(Integer id) {
 		 Optional<Pedido> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
@@ -65,7 +68,7 @@ public class PedidoService {
 			ip.setPedido(obj); // ASSOCIANDO O ITEM DE PEDIDO COM O NOVO PEDIDO
 		}
 		itemPedidoRepository.saveAll(obj.getItens()); // SALVANDO OS ITENS(LISTA) NO REPOSITÓRIO
-		System.out.println(obj); // IMPRIMINDO O PEDIDO (toString)
+		emailService.sendOrderConfirmationEmail(obj);
 		return obj;
 	}
 }

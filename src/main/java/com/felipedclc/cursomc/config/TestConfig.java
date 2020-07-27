@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.felipedclc.cursomc.services.DBService;
+import com.felipedclc.cursomc.services.EmailService;
+import com.felipedclc.cursomc.services.MockEmailService;
 
 @Configuration
 @Profile("test")
@@ -20,5 +22,10 @@ public class TestConfig { // CONFIGURAÇÕES ESPECÍFICA DO PROFILE TEST (applic
 	public boolean instantiateDatabase() throws ParseException {
 		dbService.instantiateTestDatabase();
 		return true;
+	}
+	
+	@Bean
+	public EmailService emailService() { // INSTANCIA AUTOMATICA DO MockEmailService A PARTIR DA INTERFACE EmailService 
+		return new MockEmailService();
 	}
 }
