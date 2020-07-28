@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -24,6 +25,7 @@ import com.felipedclc.cursomc.security.JWTUtil;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true) // PERMITE ANOTAÇÕES DE PRE-AUTORIZAÇÃO NOS END POINTS 
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
@@ -39,10 +41,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			"/h2-console/**",
 	};
 	
-	private static final String[] PUBLIC_MATCHERS_GET = { // DEFININDO QUAIS OS CAMINHOS ESTÃO LIBERADOS(apenas para o get)
+	private static final String[] PUBLIC_MATCHERS_GET = { // DEFININDO QUAIS OS CAMINHOS ESTÃO LIBERADOS(apenas para o GET)
 			"/produtos/**",
 			"/categorias/**",
-			"/clientes/**"
+	};
+	
+	private static final String[] PUBLIC_MATCHERS_POST = { // DEFININDO QUAIS OS CAMINHOS ESTÃO LIBERADOS(apenas para o POST)
+			"/clientes/**", // CADASTRO
 	};
 	
 	@Override
@@ -55,7 +60,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.cors().and().csrf().disable(); // CHAMANDO O CORS E DESATIVANDO O CSRF(ARMAZENA SEÇÃO)
 		http.authorizeRequests() 
 			.antMatchers(PUBLIC_MATCHERS).permitAll() // PERMITE TODOS OS CAMINHOS DO VETOR 
-			.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll() // PERMITE APENAS ACESSAR DADOS
+			.antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll() // PERMITE INSERIR DADOS(cliente/cadastro)
+			.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll() // PERMITE ACESSAR DADOS
 			.anyRequest().authenticated(); // PEDE AUTORIZAÇÃO PARA QUEM NÃO FOR DO VETOR
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil)); // REGISTRANDO O FILTRO DE AUTENTICAÇÃO
 		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService)); // FILTRO DE AUTORIZAÇÃO
