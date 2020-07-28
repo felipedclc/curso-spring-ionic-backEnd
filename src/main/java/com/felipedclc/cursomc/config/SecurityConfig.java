@@ -19,6 +19,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.felipedclc.cursomc.security.JWTAuthenticationFilter;
+import com.felipedclc.cursomc.security.JWTAuthorizationFilter;
 import com.felipedclc.cursomc.security.JWTUtil;
 
 @Configuration
@@ -57,6 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll() // PERMITE APENAS ACESSAR DADOS
 			.anyRequest().authenticated(); // PEDE AUTORIZAÇÃO PARA QUEM NÃO FOR DO VETOR
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil)); // REGISTRANDO O FILTRO DE AUTENTICAÇÃO
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService)); // FILTRO DE AUTORIZAÇÃO
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // BACK-END NÃO PDOE CRIAR SESSÃO DE USUÁRIO
 	}
 	
