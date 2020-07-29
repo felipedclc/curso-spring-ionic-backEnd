@@ -6,8 +6,12 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.felipedclc.cursomc.domain.Cliente;
 import com.felipedclc.cursomc.domain.ItemPedido;
 import com.felipedclc.cursomc.domain.PagamentoComBoleto;
 import com.felipedclc.cursomc.domain.Pedido;
@@ -15,6 +19,8 @@ import com.felipedclc.cursomc.domain.enums.EstadoPagamento;
 import com.felipedclc.cursomc.repositories.ItemPedidoRepository;
 import com.felipedclc.cursomc.repositories.PagamentoRepository;
 import com.felipedclc.cursomc.repositories.PedidoRepository;
+import com.felipedclc.cursomc.security.UserSS;
+import com.felipedclc.cursomc.services.exceptions.AuthorizationException;
 import com.felipedclc.cursomc.services.exceptions.ObjectNotFoundException;
 
 @Service // CLASSE QUE BUSCA OS DADOS DO REPOSITÓRIO E PASSA PARA O CONTROLADOR REST 
@@ -70,5 +76,15 @@ public class PedidoService {
 		itemPedidoRepository.saveAll(obj.getItens()); // SALVANDO OS ITENS(LISTA) NO REPOSITÓRIO
 		emailService.sendOrderConfirmationHtmlEmail(obj);
 		return obj;
+	}
+	
+	public Page<Pedido> findPage(Integer page, Integer linesPerPage, String orderBy, String direction){
+		UserSS user = UserService.authenticated(); // OBTENDO O USUARIO LOGADO
+		if(user==null) { // UM CLIENTE SÓ PODE ACESSAR SEUS PROPRIOS PEDIDOS
+			throw new AuthorizationException("Acesso negado");
+		}
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage,Direction.valueOf(direction), orderBy);
+		Cliente cliente = clienteService.find(user.getId()); // RETORNANDO APENAS OS PEDIDOS DO CLIENTE LOGADO
+		return repo.findByCliente(cliente, pageRequest);
 	}
 }
