@@ -16,12 +16,15 @@ import org.springframework.stereotype.Service;
 import com.felipedclc.cursomc.domain.Cidade;
 import com.felipedclc.cursomc.domain.Cliente;
 import com.felipedclc.cursomc.domain.Endereco;
+import com.felipedclc.cursomc.domain.enums.Perfil;
 import com.felipedclc.cursomc.domain.enums.TipoCliente;
 import com.felipedclc.cursomc.dto.ClienteDTO;
 import com.felipedclc.cursomc.dto.ClienteNewDTO;
 import com.felipedclc.cursomc.repositories.ClienteRepository;
 import com.felipedclc.cursomc.repositories.EnderecoRepository;
 import com.felipedclc.cursomc.resources.exception.DataIntegrityException;
+import com.felipedclc.cursomc.security.UserSS;
+import com.felipedclc.cursomc.services.exceptions.AuthorizationException;
 import com.felipedclc.cursomc.services.exceptions.ObjectNotFoundException;
 
 @Service // CLASSE QUE BUSCA OS DADOS DO REPOSITÓRIO E PASSA PARA O CONTROLADOR REST 
@@ -37,6 +40,12 @@ public class ClienteService {
 	private BCryptPasswordEncoder pe;
 	
 	public Cliente find(Integer id) {
+		
+		UserSS user = UserService.authenticated();
+		if(user==null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) { // hasRole TESTA SE O PERFIL É ADMIN
+			throw new AuthorizationException("Acesso negado");
+		}
+		
 		 Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 		 "Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
