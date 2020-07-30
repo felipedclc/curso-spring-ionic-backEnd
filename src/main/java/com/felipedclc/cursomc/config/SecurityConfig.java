@@ -47,7 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	};
 	
 	private static final String[] PUBLIC_MATCHERS_POST = { // DEFININDO QUAIS OS CAMINHOS ESTÃO LIBERADOS(apenas para o POST)
-			"/clientes/**", // CADASTRO
+			"/clientes",
+			"/clientes/picture",
 			"/auth/forgot/**"
 	};
 	
