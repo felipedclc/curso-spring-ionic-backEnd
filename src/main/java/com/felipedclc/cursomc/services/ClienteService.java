@@ -1,5 +1,6 @@
 package com.felipedclc.cursomc.services;
 
+import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -7,6 +8,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,9 +46,15 @@ public class ClienteService {
 	@Autowired
 	private S3Service s3Service;
 	
+	@Autowired
+	private ImageService imageService;
+	
+	@Value("${img.prefix.client.profile}")
+	private String prefix;
+	
 	public Cliente find(Integer id) {
 		
-		UserSS user = UserService.authenticated();
+		UserSS user = UserService.authenticated(); // METODO QUE PEGA O USUARIO LOGADO
 		if(user==null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) { // hasRole TESTA SE O PERFIL É ADMIN
 			throw new AuthorizationException("Acesso negado");
 		}
@@ -115,6 +123,15 @@ public class ClienteService {
 	}
 	
 	public URI uploadProfilePicture(MultipartFile multiPartFile) { 
-		return s3Service.uploadFile(multiPartFile);
+		
+		UserSS user = UserService.authenticated(); // PEGANDO O CLIENTE AUTENTICADO(LOGADO) 
+		if(user==null) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		// EXTRAINDO UM ARQUIVO JPG QUE FOI ENVIADO(multipartFile)
+		BufferedImage jpgImage = imageService.getJpgImageFromFile(multiPartFile);
+		String fileName = prefix + user.getId() + ".jpg"; // NOME DO ARQUIVO QUE SERA ENVIANDO PARA O S3
+		
+		return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
 	}
 }
