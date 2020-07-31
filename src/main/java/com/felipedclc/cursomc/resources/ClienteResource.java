@@ -39,6 +39,12 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(obj);
 	}
 	
+	@RequestMapping(value="/email", method=RequestMethod.GET) // END POINT EMAIL 
+	public ResponseEntity<Cliente> find(@RequestParam(value="value") String email) { // RECEBE EMAIL COMO VALOR(PARAMETRO)
+		Cliente obj = service.findByEmail(email); // CHAMANDO O SERVIÇO 
+		return ResponseEntity.ok().body(obj); // RETORNANDO O OBJ
+	}
+	
 	@Transactional
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO objDTO) { // @RequestBody CONVERTE O JSON PARA O OBJETO JAVA
