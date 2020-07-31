@@ -52,6 +52,9 @@ public class ClienteService {
 	@Value("${img.prefix.client.profile}")
 	private String prefix;
 	
+	@Value("${img.profile.size}")
+	private Integer size;
+	
 	public Cliente find(Integer id) {
 		
 		UserSS user = UserService.authenticated(); // METODO QUE PEGA O USUARIO LOGADO
@@ -130,6 +133,9 @@ public class ClienteService {
 		}
 		// EXTRAINDO UM ARQUIVO JPG QUE FOI ENVIADO(multipartFile)
 		BufferedImage jpgImage = imageService.getJpgImageFromFile(multiPartFile);
+		jpgImage = imageService.cropSquare(jpgImage); // RECORTANDO A IMAGEM
+		jpgImage = imageService.resize(jpgImage, size); // REDIMENSIONANDO A IMAGEM  
+		
 		String fileName = prefix + user.getId() + ".jpg"; // NOME DO ARQUIVO QUE SERA ENVIANDO PARA O S3
 		
 		return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
