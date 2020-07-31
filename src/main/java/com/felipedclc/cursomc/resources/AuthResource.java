@@ -1,4 +1,4 @@
-package com.felipedclc.cursomc.resources.exception;
+package com.felipedclc.cursomc.resources;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -31,6 +31,7 @@ public class AuthResource {
 		UserSS user = UserService.authenticated(); // PEGANDO O USUARIO LOGADO
 		String token = jwtUtil.generateToken(user.getUsername()); // GERANDO NOVO TOKEN PARA O USUARIO
 		response.addHeader("Authorization", "Bearer " + token); // ADD O TOKEN NA RESPOSTA DA REQUISIÇÃO 
+		response.addHeader("access-control-expose-headers", "Authorization"); // ADD A EXPOSIÇÃO DO CABEÇALHO 
 		return ResponseEntity.noContent().build();
 	}
 	

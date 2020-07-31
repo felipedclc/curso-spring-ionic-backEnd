@@ -57,5 +57,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		String username = ((UserSS) auth.getPrincipal()).getUsername(); //PEGANDO O USERNAME E RETORNANDO UM USUARIO DO SPRING SECURITY
         String token = jwtUtil.generateToken(username); // GERA O TOKEN A PARTIR DO USUARIO(EMAIL)
         res.addHeader("Authorization", "Bearer " + token); // ACRESCENTANDO O TOKEN NA RESPOSTA DA REQUISIÇÃO
+        res.addHeader("access-control-expose-headers", "Authorization"); // COMANDO PARA LIBERAR A LEITURA DO HEADER(CABEÇALHO)
 	}
 }
