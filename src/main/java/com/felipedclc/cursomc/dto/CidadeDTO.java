@@ -15,7 +15,6 @@ public class CidadeDTO implements Serializable {
 	}
 
 	public CidadeDTO(Cidade obj) {
-		super();
 		this.id = obj.getId();
 		this.name = obj.getName();
 	}

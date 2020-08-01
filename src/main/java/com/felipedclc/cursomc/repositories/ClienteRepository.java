@@ -10,5 +10,5 @@ import com.felipedclc.cursomc.domain.Cliente;
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> { 
 
 	@Transactional(readOnly=true) // APENAS PARA LEITURA - CARREGA MENOS O SISTEMA
-	Cliente findByEmail (String email); // FindBy(Email) - SPRING DETECTA (formato) E FAZ A BUSCA (STRING)
+	public Cliente findByEmail (String email); // FindBy(Email) - SPRING DETECTA (formato) E FAZ A BUSCA (STRING)
 }
