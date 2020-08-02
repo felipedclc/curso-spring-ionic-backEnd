@@ -77,8 +77,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() { 
+		CorsConfiguration config = new CorsConfiguration().applyPermitDefaultValues();
+		config.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "OPTIONS")); // LISTA DE METODOS QUE PERMITEM O CORS
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+		source.registerCorsConfiguration("/**", config);
 		return source;  // CONCEDENDO ACESSO AOS END POINTS POR MULTIPLAS FONTES(/**) COM AS CONFIGURAÇÕES BÁSICAS 
 	}
 	
